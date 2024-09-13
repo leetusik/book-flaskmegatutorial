@@ -57,4 +57,48 @@ $ flask db upgrade
 >>> users = db.session.scalars(query).all()
 >>> users
 [<User john>, <User susan>]
+
+# get all users in reverse alphabetical order
+>>> query = sa.select(User).order_by(User.username.desc())
+>>> db.session.scalars(query).all()
+[<User susan>, <User john>]
+
+# get all users that have usernames starting with "s"
+>>> query = sa.select(User).where(User.username.like('
+
+Grinberg, Miguel. The New And Improved Flask Mega-Tutorial (2024 Edition) (p. 81). Miguel Grinberg. Kindle Edition.
+```
+
+> Q1. In User, posts is hinted WriteOnlyMapped["Post"]. is it ok not ["Post"] but just [Post]?
+
+> A1. You can indeed use so.Mapped[Post] instead of so.Mapped["Post"] in many cases, especially if you are defining the Post class before using it in User. However, if Post is defined after User, Python's name resolution will not find Post because it hasn't been defined yet. Using the string form "Post" allows Python to defer the resolution of the Post class name until later. This is called a "forward reference," and it's useful when the referenced class is defined later in the file.
+
+> Q2. WriteOnlyMApped is used because User is one and Post is many type of relationship in this situation?
+
+> A2. The so.WriteOnlyMapped hint is used to indicate that the relationship is one-to-many, as you correctly pointed out. The posts attribute in User is a collection of Post objects (since a user can author multiple posts), and this is typically implemented as a one-to-many relationship in SQLAlchemy. However, WriteOnlyMapped suggests that you intend this relationship to be write-only, meaning you don't expect to read or access the related Post objects directly through this attribute. If you want a read-write relationship (which is common), you would simply use so.Mapped, not so.WriteOnlyMapped.
+
+After configure practice.py like below,
+
+```python
+import sqlalchemy as sa
+import sqlalchemy.orm as so
+
+from app import app, db
+from app.models import Post, User
+
+
+@app.shell_context_processor
+def make_shell_context():
+    return {"sa": sa, "so": so, "db": db, "User": User, "Post": Post}
+
+```
+
+Using command `flask shell` will make python interpreter to understand flask things such like above.
+With no `flask shell` but `python` command, then you need to import things and push to do things like below.
+
+```python
+>>> from app import app, db
+>>> from app.models import User, Post
+>>> import sqlalchemy as sa
+>>> app.app_context().push()
 ```
