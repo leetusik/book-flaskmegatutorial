@@ -102,3 +102,18 @@ With no `flask shell` but `python` command, then you need to import things and p
 >>> import sqlalchemy as sa
 >>> app.app_context().push()
 ```
+
+> The way Flask-Login protects a view function against anonymous users is with a decorator called @login_required.
+
+This is extremely useful because now I can insert code that I want to execute before any view function in the application, and I can have it in a single place.
+
+```python
+
+@app.before_request
+def before_request():
+    # current_user is given by flask app it self.
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.now(timezone.utc)
+        db.session.commit()
+
+```
