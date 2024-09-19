@@ -11,6 +11,24 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import db, login
 
+followers = sa.Table(
+    "followers",
+    db.metadata,
+    # Compounded Primary Key.(two of foreignkey is primary key. which means combination of two will be unique.)
+    sa.Column(
+        "follower_id",
+        sa.Integer,
+        sa.ForeignKey("user.id"),
+        primary_key=True,
+    ),
+    sa.Column(
+        "followed_id",
+        sa.Integer,
+        sa.ForeignKey("user.id"),
+        primary_key=True,
+    ),
+)
+
 
 class User(UserMixin, db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -35,6 +53,61 @@ class User(UserMixin, db.Model):
 
     # The posts attribute in the User class is a collection (typically a list) of Post objects. This tells SQLAlchemy that a User can have many Post objects.
     posts: so.WriteOnlyMapped["Post"] = so.relationship(back_populates="author")
+
+    # follow
+    following: so.WriteOnlyMapped["User"] = so.relationship(
+        secondary=followers,
+        primaryjoin=(followers.c.follower_id == id),
+        secondaryjoin=(followers.c.followed_id == id),
+        back_populates="followers",
+    )
+    followers: so.WriteOnlyMapped["User"] = so.relationship(
+        secondary=followers,
+        primaryjoin=(followers.c.followed_id == id),
+        secondaryjoin=(followers.c.follower_id == id),
+        back_populates="following",
+    )
+
+    def follow(self, user):
+        if not self.is_following(user):
+            self.following.add(user)
+
+    def unfollow(self, user):
+        if self.is_following(user):
+            self.following.remove(user)
+
+    def is_following(self, user):
+        query = self.following.select().where(User.id == user.id)
+        return db.session.scalar(query) is not None
+
+    def followers_count(self):
+        query = sa.select(sa.func.count()).select_from(
+            self.followers.select().subquery()
+        )
+        return db.session.scalar(query)
+
+    def following_count(self):
+        query = sa.select(sa.func.count()).select_from(
+            self.following.select().subquery()
+        )
+        return db.session.scalar(query)
+
+    def following_posts(self):
+        Author = so.aliased(User)
+        Follower = so.aliased(User)
+        return (
+            sa.select(Post)
+            .join(Post.author.of_type(Author))
+            # by isouter=True, include the all posts that even the author has no followers
+            .join(
+                Author.followers.of_type(Follower),
+                isouter=True,
+            )
+            .where(sa.or_(Follower.id == self.id, Author.id == self.id))
+            # filtering eliminate duplicates.
+            .group_by(Post)
+            .order_by(Post.timestamp.desc())
+        )
 
     def __repr__(self):
         return "<User {}>".format(self.username)
