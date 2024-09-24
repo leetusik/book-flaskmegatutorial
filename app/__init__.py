@@ -31,7 +31,6 @@ babel = Babel(app, locale_selector=get_locale)
 login.login_view = "login"
 login.login_message = _l("Please log in to access this page.")
 
-
 if not app.debug:
     # email things
     if app.config["MAIL_SERVER"]:
