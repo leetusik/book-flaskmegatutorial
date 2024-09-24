@@ -1,6 +1,7 @@
 from threading import Thread
 
 from flask import render_template
+from flask_babel import _  # Import for translation support
 from flask_mail import Message
 
 from app import app, mail
@@ -25,7 +26,8 @@ def send_email(subject, sender, recipients, text_body, html_body):
 def send_password_reset_email(user):
     token = user.get_reset_password_token()
     send_email(
-        "[Practice] Reset Your Password",
+        # Make the subject translatable
+        _("[Practice] Reset Your Password"),
         sender=app.config["ADMINS"][0],
         recipients=[user.email],
         text_body=render_template(
