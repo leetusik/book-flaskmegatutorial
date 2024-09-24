@@ -13,8 +13,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 def get_locale():
-    # return request.accept_languages.best_match(app.config["LANGUAGES"])
-    return "ko"
+    return request.accept_languages.best_match(app.config["LANGUAGES"])
+    # return "ko"
 
 
 from config import Config

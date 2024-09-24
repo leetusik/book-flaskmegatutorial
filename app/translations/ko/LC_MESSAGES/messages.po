@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-09-24 14:03+0900\n"
+"POT-Creation-Date: 2024-09-24 16:12+0900\n"
 "PO-Revision-Date: 2024-09-24 14:05+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: app/__init__.py:31
+#: app/__init__.py:32
 msgid "Please log in to access this page."
 msgstr "해당 페이지에 진입하기 위해 로그인을 해주세요."
 
@@ -84,56 +84,64 @@ msgstr "무슨 생각을 하고있나요?"
 msgid "Request Password Reset"
 msgstr "비밀번호 초기화 요청하기"
 
-#: app/routes.py:32
+#: app/routes.py:42
 msgid "Your post is now live!"
 msgstr "포스트가 업데이트되었습니다!"
 
-#: app/routes.py:75
+#: app/routes.py:85
 msgid "Invalid username"
 msgstr "해당 유저를 찾을 수 없습니다."
 
-#: app/routes.py:78
+#: app/routes.py:88
 msgid "Invalid password"
 msgstr "비밀번호가 틀렸습니다."
 
-#: app/routes.py:105
+#: app/routes.py:115
 msgid "Congratulations, you are now a registered user!"
 msgstr "축하합니다! 가입이 완료되었습니다!"
 
-#: app/routes.py:157
+#: app/routes.py:167
 msgid "Your chagnes have been saved."
 msgstr "변경사항이 저장되었습니다."
 
-#: app/routes.py:172 app/routes.py:192
+#: app/routes.py:182 app/routes.py:202
 #, python-format
 msgid "User %(username)s not found."
 msgstr "유저 %(username)s을 찾을 수 없습니다."
 
-#: app/routes.py:175
+#: app/routes.py:185
 msgid "You cannot follow yourself!"
 msgstr "자신을 팔로우할 수 없습니다."
 
-#: app/routes.py:179
+#: app/routes.py:189
 #, python-format
 msgid "You are following %(username)s!"
 msgstr "%(username)s을 팔로우합니다!"
 
-#: app/routes.py:195
+#: app/routes.py:205
 msgid "You cannot unfollow yourself!"
 msgstr "스스로를 언팔로우 할 수 없습니다."
 
-#: app/routes.py:199
+#: app/routes.py:209
 #, python-format
 msgid "You are not following %(username)s!"
 msgstr "%(username)s를 언팔로우합니다."
 
-#: app/routes.py:236
+#: app/routes.py:246
 msgid "Check your email for the instructions to reset your password"
 msgstr "비밀번호를 초기화하기 위해 이메일로 발송된 지시에 따라주세요."
 
-#: app/routes.py:256
+#: app/routes.py:266
 msgid "Your password has been reset."
 msgstr "비밀번호가 초기화되었습니다."
+
+#: app/translate.py:9
+msgid "Error: the translation service is not configured"
+msgstr "에러!"
+
+#: app/translate.py:25
+msgid "Error: the translation service failed."
+msgstr "에러!"
 
 #: app/templates/404.html:3
 msgid "File Not Found"
@@ -155,6 +163,10 @@ msgstr "해당 문제를 관리자에게 전송했습니다. 죄송합니다."
 #, python-format
 msgid "%(username)s said %(when)s"
 msgstr "%(username)s %(when)s"
+
+#: app/templates/_post.html:18
+msgid "Translate"
+msgstr "번역하기"
 
 #: app/templates/base.html:9
 msgid "Welcome to Practice"
